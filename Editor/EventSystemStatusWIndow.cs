@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,9 +10,10 @@ namespace Kogane.Internal
 {
     internal sealed class EventSystemStatusWindow : EditorWindow
     {
-        private string   m_filteringText;
-        private Vector2  m_scrollPosition;
-        private GUIStyle m_textAreaStyleCache;
+        private SearchField m_searchField;
+        private string      m_filteringText;
+        private Vector2     m_scrollPosition;
+        private GUIStyle    m_textAreaStyleCache;
 
         private GUIStyle TextAreaStyle =>
             m_textAreaStyleCache ??= new GUIStyle( "PreOverlayLabel" )
@@ -31,13 +33,15 @@ namespace Kogane.Internal
         {
             if ( !Application.isPlaying ) return;
 
+            m_searchField ??= new SearchField();
+
             var eventSystem = EventSystem.current;
 
             if ( eventSystem == null ) return;
 
             var status = eventSystem.ToString();
 
-            m_filteringText = EditorGUILayout.TextField( "Filter", m_filteringText );
+            m_filteringText = m_searchField.OnToolbarGUI( m_filteringText );
 
             if ( GUILayout.Button( "Copy", EditorStyles.toolbarButton ) )
             {
