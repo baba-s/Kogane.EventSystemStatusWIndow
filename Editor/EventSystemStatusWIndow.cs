@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +9,7 @@ namespace Kogane.Internal
 {
     internal sealed class EventSystemStatusWindow : EditorWindow
     {
+        private string   m_filteringText;
         private Vector2  m_scrollPosition;
         private GUIStyle m_textAreaStyleCache;
 
@@ -34,6 +37,8 @@ namespace Kogane.Internal
 
             var status = eventSystem.ToString();
 
+            m_filteringText = EditorGUILayout.TextField( "Filter", m_filteringText );
+
             if ( GUILayout.Button( "Copy", EditorStyles.toolbarButton ) )
             {
                 EditorGUIUtility.systemCopyBuffer = Regex.Replace( status, "<.*?>", string.Empty );
@@ -41,7 +46,12 @@ namespace Kogane.Internal
 
             using var scrollViewScope = new EditorGUILayout.ScrollViewScope( m_scrollPosition );
 
-            EditorGUILayout.TextArea( status, TextAreaStyle );
+            var texts = string.IsNullOrWhiteSpace( m_filteringText )
+                    ? status
+                    : string.Join( "\n", status.Split( '\n' ).Where( x => x.Contains( m_filteringText, StringComparison.OrdinalIgnoreCase ) ) )
+                ;
+
+            EditorGUILayout.TextArea( texts, TextAreaStyle );
 
             m_scrollPosition = scrollViewScope.scrollPosition;
         }
