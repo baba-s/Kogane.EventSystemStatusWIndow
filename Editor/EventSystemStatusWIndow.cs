@@ -23,7 +23,7 @@ namespace Kogane.Internal
                 fontStyle = FontStyle.Normal
             };
 
-        [MenuItem( "Window/Kogane/Event System Status" )]
+        [MenuItem( "Window/Kogane/Event System Status", false, 1272466869 )]
         private static void Open()
         {
             GetWindow<EventSystemStatusWindow>( "Event System" );
