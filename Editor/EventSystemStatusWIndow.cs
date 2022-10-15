@@ -16,7 +16,7 @@ namespace Kogane.Internal
         private GUIStyle    m_textAreaStyleCache;
 
         private GUIStyle TextAreaStyle =>
-            m_textAreaStyleCache ??= new GUIStyle( "PreOverlayLabel" )
+            m_textAreaStyleCache ??= new( "PreOverlayLabel" )
             {
                 richText  = true,
                 alignment = TextAnchor.UpperLeft,
@@ -33,7 +33,7 @@ namespace Kogane.Internal
         {
             if ( !Application.isPlaying ) return;
 
-            m_searchField ??= new SearchField();
+            m_searchField ??= new();
 
             var eventSystem = EventSystem.current;
 
